@@ -22,10 +22,9 @@ VECTOR_SIZE = 10
 
 def main(args):
     training_indexes = DLSTM_V1._create_training_indexes(target=args[OPTION_01])
-    for training_index in training_indexes:
-        pprint.pprint(training_index)
     training_x_datas, training_y_datas = DLSTM_V1._create_training_datas(training_indexes=training_indexes, target=args[OPTION_01], vector_size=VECTOR_SIZE)
-    for vec_size in range(VECTOR_SIZE):
+    for vec_size in range(1, 2):
+
         DLSTM_V1._create_model(
             x_trains=training_x_datas[vec_size], 
             y_trains=training_y_datas[vec_size],

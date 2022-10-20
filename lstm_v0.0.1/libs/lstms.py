@@ -15,6 +15,7 @@ from libs.files import *
 
 import os
 import numpy as np
+import pprint
 
 D2V_MODEL_ROOT_PATH = "/Users/nakamurahekikai/Desktop/binnacle-icse2020_lstm_v0.0.1/data/model/doc2vec"
 LSTM_MODEL_ROOT_PATH = "/Users/nakamurahekikai/Desktop/binnacle-icse2020_lstm_v0.0.1/data/model/lstm"
@@ -22,7 +23,7 @@ LSTM_MODEL_ROOT_PATH = "/Users/nakamurahekikai/Desktop/binnacle-icse2020_lstm_v0
 INDEX_PATH = "/Users/nakamurahekikai/Desktop/binnacle-icse2020_lstm_v0.0.1/index"
 INDEX_02_PATH = "/Users/nakamurahekikai/Desktop/binnacle-icse2020_lstm_v0.0.1/index02"
 
-TR_SIZE = 4
+TR_SIZE = 5
 
 class DLSTM(metaclass=ABCMeta):
     @staticmethod
@@ -76,13 +77,17 @@ class DLSTM_V1(DLSTM):
                         "train_x": list(),
                         "train_y": train_y
                     }
+                    NaN = 0
                     for window in windows:
                         if not (cnt_value-window) in cnt_values:
                             training_index["train_x"].append("")
+                            NaN += 1
                         else:
                             train_x = "{}:{}:{}".format(base_name, cnt_key, cnt_value-window)
                             
                             training_index["train_x"].append(train_x)
+                    if NaN >= 3:
+                        continue
                     training_indexes.append(training_index)
         
         return training_indexes
@@ -116,13 +121,13 @@ class DLSTM_V1(DLSTM):
             y_vectors = y_vectors+1; y_vectors = y_vectors*1000; y_vectors = y_vectors.astype(int)
             y_vectors = y_vectors.tolist()
 
-            for dim_id, (x_vector, y_vector) in enumerate(zip(x_vectors, y_vectors)):
+            for dim_id, (x_vec, y_vec) in enumerate(zip(x_vectors, y_vectors)):
                 if not dim_id in training_y_datas:
                     training_y_datas[dim_id] = list()
-                training_y_datas[dim_id].append(y_vector)
+                training_y_datas[dim_id].append(y_vec)
                 if not dim_id in training_x_datas:
                     training_x_datas[dim_id] = list()
-                training_x_datas[dim_id].append(x_vector)
+                training_x_datas[dim_id].append(x_vec)
                 
 
         return training_x_datas, training_y_datas
@@ -138,8 +143,12 @@ class DLSTM_V1(DLSTM):
         from keras.utils import np_utils
 
         from keras.models import load_model
+
+        pprint.pprint(x_trains)
+        pprint.pprint(y_trains)
+
         layer = max(y_trains)+1
-        x_trains = np.reshape(x_trains, (len(x_trains), 3, 1))
+        x_trains = np.reshape(x_trains, (len(x_trains), 4, 1))
         y_trains = np.array(y_trains)
 
         models = Sequential()
