@@ -30,11 +30,10 @@ class JsonFile(File):
             return contents
         
     @staticmethod
-    def _get_file_path(target: str):
+    def _get_file_path(root_path: str):
         return glob.glob(
-            "{data_root_path}/{target}/**/*.json".format(
-                data_root_path=DATA_ROOT_PATH,
-                target=target
+            "{root_path}/**/*.json".format(
+                root_path=root_path,
             ),
             recursive=True
         )

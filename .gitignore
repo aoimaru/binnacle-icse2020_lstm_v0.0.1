@@ -163,5 +163,8 @@ cython_debug/
 data/
 
 index/
+index02/
 
 model/*
+
+lstm_v0.0.1/venv/
