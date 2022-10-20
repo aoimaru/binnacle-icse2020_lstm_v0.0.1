@@ -58,7 +58,7 @@ class DLSTM_V1(DLSTM):
         index_02_path = "{}/{}".format(INDEX_02_PATH, target)
         index_01_path = "{}/{}".format(INDEX_PATH, target)
 
-        windows = [num for num in range(TR_SIZE)]; windows.sort(reverse=True)
+        windows = [num for num in range(1, TR_SIZE)]; windows.sort(reverse=True)
 
         training_indexes = list()
 
@@ -81,8 +81,9 @@ class DLSTM_V1(DLSTM):
                             training_index["train_x"].append("")
                         else:
                             train_x = "{}:{}:{}".format(base_name, cnt_key, cnt_value-window)
+                            
                             training_index["train_x"].append(train_x)
-                        training_indexes.append(training_index)
+                    training_indexes.append(training_index)
         
         return training_indexes
     
@@ -138,7 +139,7 @@ class DLSTM_V1(DLSTM):
 
         from keras.models import load_model
         layer = max(y_trains)+1
-        x_trains = np.reshape(x_trains, (len(x_trains), 4, 1))
+        x_trains = np.reshape(x_trains, (len(x_trains), 3, 1))
         y_trains = np.array(y_trains)
 
         models = Sequential()
