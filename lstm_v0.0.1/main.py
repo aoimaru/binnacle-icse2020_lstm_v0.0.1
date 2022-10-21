@@ -54,6 +54,16 @@ def _test(args):
     ('8e4ac4930397fef9fad25ff8820dc6cd1752a503:16:11', 0.9779320657253265)
     """
 
+    queries = [
+        "1c11182d763188889c00d8f44a91d0df09e0147b:6:1",
+        "1c11182d763188889c00d8f44a91d0df09e0147b:6:2",
+        "1c11182d763188889c00d8f44a91d0df09e0147b:6:3",
+        "1c11182d763188889c00d8f44a91d0df09e0147b:6:4"
+    ]
+    """
+    <---------- Result ---------->
+    "1c11182d763188889c00d8f44a91d0df09e0147b:6:5"
+    """
 
     DLSTM_V1._predict_next_command(queries=queries, target=args[OPTION_01])
 
