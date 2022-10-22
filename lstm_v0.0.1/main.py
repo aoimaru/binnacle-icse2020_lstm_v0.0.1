@@ -20,8 +20,21 @@ INDEX_02_PATH = "/Users/nakamurahekikai/Desktop/binnacle-icse2020_lstm_v0.0.1/in
 TR_SIZE = 5
 VECTOR_SIZE = 10
 
-
 def _create_model(args):
+    training_indexes = DLSTM_V1._create_training_indexes(target=args[OPTION_01])
+    training_x_datas, training_y_datas = DLSTM_V1._create_training_datas(training_indexes=training_indexes, target=args[OPTION_01], vector_size=VECTOR_SIZE)
+    for vec_size in range(VECTOR_SIZE):
+        DLSTM_V1._create_model(
+            x_trains=training_x_datas[vec_size], 
+            y_trains=training_y_datas[vec_size],
+            target=args[OPTION_01],
+            dim_id=vec_size
+        )
+    # for training_index in training_indexes:
+    #     print(training_index)
+
+
+def _create_trace_model(args):
     training_indexes = DLSTM_V1._create_training_indexes(target=args[OPTION_01])
     training_x_datas, training_y_datas = DLSTM_V1._create_training_datas(training_indexes=training_indexes, target=args[OPTION_01], vector_size=VECTOR_SIZE)
     for vec_size in range(VECTOR_SIZE):
@@ -54,18 +67,20 @@ def _test(args):
     ('8e4ac4930397fef9fad25ff8820dc6cd1752a503:16:11', 0.9779320657253265)
     """
 
-    queries = [
-        "1c11182d763188889c00d8f44a91d0df09e0147b:6:1",
-        "1c11182d763188889c00d8f44a91d0df09e0147b:6:2",
-        "1c11182d763188889c00d8f44a91d0df09e0147b:6:3",
-        "1c11182d763188889c00d8f44a91d0df09e0147b:6:4"
-    ]
+    # queries = [
+    #     "1c11182d763188889c00d8f44a91d0df09e0147b:6:1",
+    #     "1c11182d763188889c00d8f44a91d0df09e0147b:6:2",
+    #     "1c11182d763188889c00d8f44a91d0df09e0147b:6:3",
+    #     "1c11182d763188889c00d8f44a91d0df09e0147b:6:4"
+    # ]
     """
     <---------- Result ---------->
     "1c11182d763188889c00d8f44a91d0df09e0147b:6:5"
     """
 
-    DLSTM_V1._predict_next_command(queries=queries, target=args[OPTION_01])
+    results = DLSTM_V1._predict_next_command(queries=queries, target=args[OPTION_01])
+    for result in results:
+        print(result)
 
 
 def _test_v2(args):
@@ -122,8 +137,10 @@ def _test_v2(args):
 
 
 def main(args):
-    # _create_model(args)
+    # _create_trace_model(args)
     _test_v2(args)
+    # _create_model(args)
+    # _test(args)
 
     
     

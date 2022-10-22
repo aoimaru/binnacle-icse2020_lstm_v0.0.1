@@ -221,17 +221,17 @@ class DLSTM_V1(DLSTM):
         result_vecs = result_vecs-1
 
         indexer = NmslibIndexer(d2v_model)
-        # for result in indexer.most_similar(vector=result_vecs, num_neighbors=10):
-        #     print(result)
-        #     contents_id, similarity = result[0], result[1]
-        #     contents_tag = contents_id.split(":")[0]
-        #     contents_path = "{index_path}/{target}/{contents_tag}.json".format(
-        #         index_path=INDEX_PATH,
-        #         target=target,
-        #         contents_tag=contents_tag
-        #     )
-        #     contents = JsonFile._get_contents(contents_path)
-        #     pprint.pprint(contents[contents_id])
+        for result in indexer.most_similar(vector=result_vecs, num_neighbors=10):
+            print(result)
+            contents_id, similarity = result[0], result[1]
+            contents_tag = contents_id.split(":")[0]
+            contents_path = "{index_path}/{target}/{contents_tag}.json".format(
+                index_path=INDEX_PATH,
+                target=target,
+                contents_tag=contents_tag
+            )
+            contents = JsonFile._get_contents(contents_path)
+            pprint.pprint(contents[contents_id])
         return indexer.most_similar(vector=result_vecs, num_neighbors=10)
 
 
