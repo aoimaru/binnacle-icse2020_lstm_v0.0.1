@@ -68,9 +68,62 @@ def _test(args):
     DLSTM_V1._predict_next_command(queries=queries, target=args[OPTION_01])
 
 
+def _test_v2(args):
+    Response = list()
+    windows = [window for window in range(1, TR_SIZE)]
+    windows.sort()
+    file_paths = JsonFile._get_file_path(root_path="{}/{}".format(INDEX_02_PATH, args[OPTION_01]))
+    for file_path in file_paths:
+        file_id = os.path.basename(file_path); file_id = file_id.replace(".json", "")
+        contents = JsonFile._get_contents(file_path)
+        for run_id, command_ids in contents.items():
+            # print(run_id, command_ids)
+            if len(command_ids) < 2:
+                continue
+            command_ids = [int(command_id) for command_id in command_ids]
+            command_ids.sort()
+            for index_y in range(1, max(command_ids)):
+                index_xs = list()
+                for window in windows:
+                    index_x = index_y-window
+                    if index_x >= 0:
+                        contents_id = "{}:{}:{}".format(file_id, run_id, index_x)
+                        index_xs.append(contents_id)
+                while True:
+                    if len(index_xs) >= 4:
+                        break
+                    index_xs.insert(0, "")
+                index_xs.reverse()
+                index_y = "{}:{}:{}".format(file_id, run_id, index_y)
+                # print(index_xs)
+                # print(index_y)
+                # index_01_contents = JsonFile._get_file_path(
+                #     root_path="{}/{}/{}.json".format(INDEX_PATH, args[OPTION_01], index_y)
+                # )
+                results = DLSTM_V1._predict_next_command(queries=index_xs, target=args[OPTION_01])
+                for result in results:
+                    if result[0] == index_y:
+                        Response.append(True)
+                        break
+                else:
+                    Response.append(False)
+    print("正解率:", len([Res for Res in Response if Res])/len(Response))
+
+    """
+    正解率: 0.6099893730074389
+    python3 main.py trace-gold  19538.06s user 456.41s system 102% cpu 5:25:59.12 total
+    """
+
+
+
+
+
+
+
+
 def main(args):
     # _create_model(args)
-    _test(args)
+    _test_v2(args)
 
     
     

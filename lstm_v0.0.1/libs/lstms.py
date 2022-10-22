@@ -188,13 +188,17 @@ class DLSTM_V1(DLSTM):
         d2v_model = D2V._load_model(d2v_model_path)
         vectors = list()
         for query in queries:
-            vector = d2v_model[query]
-            vectors.append(vector)
+            try:
+                vector = d2v_model[query]
+            except Exception as e:
+                pass
+            else:
+                vectors.append(vector)
         
         while True:
             if len(vectors) >= 4:
                 break
-            vectors.insert([float(0)]*VECTOR_SIZE)
+            vectors.insert(0, [float(0)]*VECTOR_SIZE)
         
         vectors = np.array(vectors).T.tolist()
 
@@ -217,17 +221,18 @@ class DLSTM_V1(DLSTM):
         result_vecs = result_vecs-1
 
         indexer = NmslibIndexer(d2v_model)
-        for result in indexer.most_similar(vector=result_vecs, num_neighbors=10):
-            print(result)
-            contents_id, similarity = result[0], result[1]
-            contents_tag = contents_id.split(":")[0]
-            contents_path = "{index_path}/{target}/{contents_tag}.json".format(
-                index_path=INDEX_PATH,
-                target=target,
-                contents_tag=contents_tag
-            )
-            contents = JsonFile._get_contents(contents_path)
-            pprint.pprint(contents[contents_id])
+        # for result in indexer.most_similar(vector=result_vecs, num_neighbors=10):
+        #     print(result)
+        #     contents_id, similarity = result[0], result[1]
+        #     contents_tag = contents_id.split(":")[0]
+        #     contents_path = "{index_path}/{target}/{contents_tag}.json".format(
+        #         index_path=INDEX_PATH,
+        #         target=target,
+        #         contents_tag=contents_tag
+        #     )
+        #     contents = JsonFile._get_contents(contents_path)
+        #     pprint.pprint(contents[contents_id])
+        return indexer.most_similar(vector=result_vecs, num_neighbors=10)
 
 
 
